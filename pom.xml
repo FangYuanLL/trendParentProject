@@ -8,6 +8,9 @@
         <module>third-part-index-data-project</module>
         <module>index-gather-store-service</module>
         <module>index-codes-service</module>
+        <module>index-data-service</module>
+        <module>index-zuul-service</module>
+        <module>trend-trading-backtest-service</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -37,6 +40,30 @@
             <artifactId>hutool-all</artifactId>
             <version>4.3.1</version>
         </dependency>
+
+
+        <!-- springboot web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- eureka-client -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <!-- feign -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- 断路器 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>

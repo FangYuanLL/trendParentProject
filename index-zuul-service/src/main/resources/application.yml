@@ -1,0 +1,20 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+spring:
+  application:
+    name: index-zuul-service
+zuul:
+  routes:
+    api-a:
+      path: /api-codes/**
+      serviceId: index-codes-service
+    api-b:
+      path: /api-backtest/**
+      serviceId: trend-trading-backtest-service
+  host:
+      max-total-connections: 5000 # 最大连接数，值越大越好，但到到达一个临界点之后，就不会提高响应速度了
+      max-per-route-connections: 5 # 每个router最大连接数，降低请求时间，越小越好，但达到一定层级就没用了
+  semaphore:
+      max-semaphores: 200 # 并发处理数，值越大越好，但到到达一个临界点之后，就不会提高响应速度了

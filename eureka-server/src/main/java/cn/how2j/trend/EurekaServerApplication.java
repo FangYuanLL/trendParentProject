@@ -6,6 +6,10 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
 import cn.hutool.core.util.NetUtil;
 
+
+// 启动redis指令:redis-server.exe redis.windows.conf
+
+
 @SpringBootApplication
 @EnableEurekaServer
 public class EurekaServerApplication {
@@ -19,6 +23,6 @@ public class EurekaServerApplication {
         }
         new SpringApplicationBuilder(EurekaServerApplication.class).properties("server.port=" + port).run(args);
     }
-    // 启动redis指令:redis-server.exe redis.windows.conf
+
 
 }
