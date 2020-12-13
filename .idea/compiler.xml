@@ -13,6 +13,7 @@
         <module name="index-zuul-service" />
         <module name="third-part-index-data-project" />
         <module name="trend-trading-backtest-service" />
+        <module name="trend-trading-backtest-view" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

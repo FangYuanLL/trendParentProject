@@ -13,8 +13,24 @@ zuul:
     api-b:
       path: /api-backtest/**
       serviceId: trend-trading-backtest-service
+    api-c:
+      path: /api-view/**
+      serviceId: trend-trading-backtest-view
   host:
-      max-total-connections: 5000 # 最大连接数，值越大越好，但到到达一个临界点之后，就不会提高响应速度了
-      max-per-route-connections: 5 # 每个router最大连接数，降低请求时间，越小越好，但达到一定层级就没用了
+      ## max-total-connections: 5000 # 最大连接数，值越大越好，但到到达一个临界点之后，就不会提高响应速度了
+      ## max-per-route-connections: 5 # 每个router最大连接数，降低请求时间，越小越好，但达到一定层级就没用了
+      connect-timeout-millis: 60000
+      socket-timeout-millis: 60000
   semaphore:
       max-semaphores: 200 # 并发处理数，值越大越好，但到到达一个临界点之后，就不会提高响应速度了
+## 将Zuul的超时时间大于ribbon的超时时间，于是就不再显示超时异常了
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
