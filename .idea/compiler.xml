@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="eureka-server" />
         <module name="index-codes-service" />
+        <module name="index-config-server" />
         <module name="index-data-service" />
         <module name="index-gather-store-service" />
         <module name="index-zuul-service" />
