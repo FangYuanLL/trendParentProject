@@ -14,7 +14,7 @@ public class IpConfiguration implements ApplicationListener<WebServerInitialized
         this.port = webServerInitializedEvent.getWebServer().getPort();
     }
 
-    public int GetPort(){
+    public int GetPort() {
         return this.port;
     }
 }

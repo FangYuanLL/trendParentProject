@@ -22,7 +22,7 @@ public class IndexController {
     @GetMapping("/codes")
     @CrossOrigin
     public List<Index> codes() throws Exception {
-        System.out.println("current instance's port is "+ ipConfiguration.GetPort());
+        System.out.println("current instance's port is " + ipConfiguration.GetPort());
         return indexService.get();
     }
 }

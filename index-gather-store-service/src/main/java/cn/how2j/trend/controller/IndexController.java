@@ -11,7 +11,8 @@ import cn.how2j.trend.service.IndexService;
 
 @RestController
 public class IndexController {
-    @Autowired IndexService indexService;
+    @Autowired
+    IndexService indexService;
 
 //  http://127.0.0.1:8001/freshCodes
 //  http://127.0.0.1:8001/getCodes
@@ -21,10 +22,12 @@ public class IndexController {
     public List<Index> fresh() throws Exception {
         return indexService.fresh();
     }
+
     @GetMapping("/getCodes")
     public List<Index> get() throws Exception {
         return indexService.get();
     }
+
     @GetMapping("/removeCodes")
     public String remove() throws Exception {
         indexService.remove();

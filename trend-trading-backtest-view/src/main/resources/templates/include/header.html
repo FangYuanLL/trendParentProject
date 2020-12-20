@@ -12,21 +12,21 @@
     <script src="js/bootstrap-datepicker/1.8.0/bootstrap-datepicker.zh-CN.min.js"></script>
 
     <script>
-        function formatMoney(num){
+        function formatMoney(num) {
             num = new String(num);
-            num = num.toString().replace(/\$|\,/g,'');
-            if(isNaN(num))
+            num = num.toString().replace(/\$|\,/g, '');
+            if (isNaN(num))
                 num = "0";
             sign = (num == (num = Math.abs(num)));
-            num = Math.floor(num*100+0.50000000001);
-            cents = num%100;
-            num = Math.floor(num/100).toString();
-            if(cents<10)
+            num = Math.floor(num * 100 + 0.50000000001);
+            cents = num % 100;
+            num = Math.floor(num / 100).toString();
+            if (cents < 10)
                 cents = "0" + cents;
-            for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
-                num = num.substring(0,num.length-(4*i+3))+','+
-                    num.substring(num.length-(4*i+3));
-            return (((sign)?'':'-') + num + '.' + cents);
+            for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3); i++)
+                num = num.substring(0, num.length - (4 * i + 3)) + ',' +
+                    num.substring(num.length - (4 * i + 3));
+            return (((sign) ? '' : '-') + num + '.' + cents);
         }
 
         function formatNumber(number, decimals, dec_point, thousands_sep) {
@@ -61,19 +61,19 @@
             return s.join(dec);
         }
 
-        Vue.filter("formatMoneyFilter", function(value){
+        Vue.filter("formatMoneyFilter", function (value) {
             return formatMoney(value);
         });
 
-        Vue.filter("formatNumberFilter", function(value,decimal){
-            if(decimal==null)
+        Vue.filter("formatNumberFilter", function (value, decimal) {
+            if (decimal == null)
                 decimal = 0;
 
-            return formatNumber(value,decimal, ".",",");
+            return formatNumber(value, decimal, ".", ",");
         });
 
         Vue.filter('formatDateFilter', function (value, formatString) {
-            if(null==value)
+            if (null == value)
                 return "";
             formatString = formatString || 'YYYY-MM-DD';
             return moment(value).format(formatString);
@@ -86,5 +86,5 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title th:text="${title}" ></title>
+    <title th:text="${title}"></title>
 </template>

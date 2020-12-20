@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:v-bind="http://www.w3.org/1999/xhtml">
-<head th:include="include/header::html('趋势投资模拟回测')" ></head>
-<body >
+<head th:include="include/header::html('趋势投资模拟回测')"></head>
+<body>
 <script>
     var chart4Profit = null;
 
-    $(function(){
+    $(function () {
         var data4Vue = {
             indexes: [],
             currentIndex: '000300',
 
-            indexDatas:[],
-            dates:[],
-            closePoints:[],
+            indexDatas: [],
+            dates: [],
+            closePoints: [],
 
             flushDate: true,
 
@@ -21,33 +21,33 @@
             startDate: null,
             endDate: null,
 
-            profits:[],
-            profitValues:[],
+            profits: [],
+            profitValues: [],
 
-            trades:[],
+            trades: [],
 
-            years:0,
-            indexIncomeTotal:0,
-            indexIncomeAnnual:0,
-            trendIncomeTotal:0,
-            trendIncomeAnnual:0,
+            years: 0,
+            indexIncomeTotal: 0,
+            indexIncomeAnnual: 0,
+            trendIncomeTotal: 0,
+            trendIncomeAnnual: 0,
 
-            winCount:0,
-            lossCount:0,
-            avgWinRate:0,
-            avgLossRate:0,
+            winCount: 0,
+            lossCount: 0,
+            avgWinRate: 0,
+            avgLossRate: 0,
 
             annualProfits: [],
-            annuals:[],
-            indexIncomes:[],
-            trendIncomes:[],
+            annuals: [],
+            indexIncomes: [],
+            trendIncomes: [],
 
-            ma:20,
+            ma: 20,
 
-            buyThreshold:1.01,
-            sellThreshold:0.99,
+            buyThreshold: 1.01,
+            sellThreshold: 0.99,
 
-            serviceCharge:0.0,
+            serviceCharge: 0.0,
 
         };
 
@@ -55,29 +55,29 @@
         var vue = new Vue({
             el: '#workingArea',
             data: data4Vue,
-            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+            mounted: function () { //mounted　表示这个 Vue 对象加载成功了
                 this.init();
                 $("[data-toggle='tooltip']").tooltip();
             },
             methods: {
-                init:function(){
-                    var url =  "http://127.0.0.1:8031/api-codes/codes";
-                    axios.get(url).then(function(response) {
+                init: function () {
+                    var url = "http://127.0.0.1:8031/api-codes/codes";
+                    axios.get(url).then(function (response) {
                         vue.indexes = response.data;
-                        vue.$nextTick(function(){
+                        vue.$nextTick(function () {
                             vue.simulate();
                         });
                     });
                 },
-                simulate:function(){
-                    var url =  "http://127.0.0.1:8031/api-backtest/simulate/"+vue.currentIndex+"/"+vue.ma+"/"+vue.buyThreshold+"/"+vue.sellThreshold+"/"+vue.serviceCharge +"/"+vue.startDate+"/"+vue.endDate+"/";
-                    axios.get(url).then(function(response) {
+                simulate: function () {
+                    var url = "http://127.0.0.1:8031/api-backtest/simulate/" + vue.currentIndex + "/" + vue.ma + "/" + vue.buyThreshold + "/" + vue.sellThreshold + "/" + vue.serviceCharge + "/" + vue.startDate + "/" + vue.endDate + "/";
+                    axios.get(url).then(function (response) {
                         //清空原数据
                         vue.indexDatas = [];
                         vue.closePoints = [];
                         vue.dates = [];
                         vue.profits = [];
-                        vue.profitValues =[];
+                        vue.profitValues = [];
                         vue.trades = [];
 
                         vue.annualProfits = [];
@@ -99,8 +99,8 @@
 
                         //收益
                         vue.profits = response.data.profits;
-                        console.log("vue.profits.length:"+vue.profits.length);
-                        console.log("vue.profits:"+vue.profits);
+                        console.log("vue.profits.length:" + vue.profits.length);
+                        console.log("vue.profits:" + vue.profits);
 
                         vue.years = response.data.years;
                         vue.indexIncomeTotal = response.data.indexIncomeTotal;
@@ -116,15 +116,15 @@
 
                         vue.annualProfits = response.data.annualProfits;
 
-                        for (i in vue.annualProfits){
+                        for (i in vue.annualProfits) {
                             vue.annuals.push(vue.annualProfits[i].year);
-                            vue.indexIncomes.push(vue.annualProfits[i].indexIncome*100);
-                            vue.trendIncomes.push(vue.annualProfits[i].trendIncome*100);
+                            vue.indexIncomes.push(vue.annualProfits[i].indexIncome * 100);
+                            vue.trendIncomes.push(vue.annualProfits[i].trendIncome * 100);
                         }
 
 
                         //指数数据
-                        for(i in vue.indexDatas){
+                        for (i in vue.indexDatas) {
                             var indexData = vue.indexDatas[i];
                             vue.dates.push(indexData.date);
                             vue.closePoints.push(indexData.closePoint);
@@ -147,28 +147,27 @@
                         chart4AnnualIncome.update();
 
 
-                        if(vue.flushDate)
+                        if (vue.flushDate)
                             vue.updateDate();
-
 
 
                     });
                 },
-                changeParam:function(){
+                changeParam: function () {
                     vue.flushDate = false;
                     vue.simulate();
                 },
-                changeParamWithFlushDate:function(){
+                changeParamWithFlushDate: function () {
                     vue.flushDate = true;
                     vue.startDate = null;
                     vue.endDate = null;
                     vue.simulate();
                 },
-                updateDate:function(){
+                updateDate: function () {
                     vue.startDate = vue.indexStartDate;
                     vue.endDate = vue.indexEndDate;
 
-                    console.log("vue.indexStartDate："+vue.indexStartDate);
+                    console.log("vue.indexStartDate：" + vue.indexStartDate);
 
                     //需要先destroy，否则后续新的日期范围如果超出了前面的日期范围，会出冲突
                     $('#date4Start').datepicker("destroy");
@@ -178,16 +177,16 @@
                         autoclose: true,
                         startDate: vue.indexStartDate,
                         endDate: vue.indexEndDate,
-                    }).on("changeDate",function(e){
-                        var month = (e.date.getMonth()+1);
-                        if(month <10)
-                            month = '0'+month;
+                    }).on("changeDate", function (e) {
+                        var month = (e.date.getMonth() + 1);
+                        if (month < 10)
+                            month = '0' + month;
                         var day = (e.date.getDate());
-                        if(day <10)
-                            day = '0'+day;
-                        vue.startDate = e.date.getFullYear()+"-"+month+"-"+day;
+                        if (day < 10)
+                            day = '0' + day;
+                        vue.startDate = e.date.getFullYear() + "-" + month + "-" + day;
 
-                        if(!vue.checkDateRange()){
+                        if (!vue.checkDateRange()) {
                             $('#date4Start').datepicker('update', vue.indexStartDate);
                             return;
                         }
@@ -202,15 +201,15 @@
                         autoclose: true,
                         startDate: vue.indexStartDate,
                         endDate: vue.indexEndDate,
-                    }).on("changeDate",function(e){
-                        var month = (e.date.getMonth()+1);
-                        if(month <10)
-                            month = '0'+month;
+                    }).on("changeDate", function (e) {
+                        var month = (e.date.getMonth() + 1);
+                        if (month < 10)
+                            month = '0' + month;
                         var day = (e.date.getDate());
-                        if(day <10)
-                            day = '0'+day;
-                        vue.endDate = e.date.getFullYear()+"-"+month+"-"+day;
-                        if(!vue.checkDateRange()){
+                        if (day < 10)
+                            day = '0' + day;
+                        vue.endDate = e.date.getFullYear() + "-" + month + "-" + day;
+                        if (!vue.checkDateRange()) {
                             $('#date4End').datepicker('update', vue.indexEndDate);
                             return;
                         }
@@ -222,15 +221,15 @@
                     $('#date4Start').datepicker('update', vue.indexStartDate);
                     $('#date4End').datepicker('update', vue.indexEndDate);
                 },
-                checkDateRange:function(){
-                    if(null==vue.startDate || null==vue.endDate)
+                checkDateRange: function () {
+                    if (null == vue.startDate || null == vue.endDate)
                         return true;
 
                     var strStartDate = vue.startDate.replace(/-/g, '/')
                     var startTime = new Date(strStartDate).getTime();
                     var strEndDate = vue.endDate.replace(/-/g, '/')
                     var endTime = new Date(strEndDate).getTime();
-                    if(startTime>endTime){
+                    if (startTime > endTime) {
                         alert("开始日期不能大于日期！");
                         return false;
                     }
@@ -274,7 +273,7 @@
                     text: '指数趋势投资收益对比图'
                 },
                 responsive: true,
-                responsiveAnimationDuration:3000,
+                responsiveAnimationDuration: 3000,
                 scales: {
                     yAxes: [{
                         ticks: {
@@ -287,7 +286,7 @@
                     mode: 'index',
 //                      axis: 'y',
                     callbacks: {
-                        label: function(tooltipItem, myData) {
+                        label: function (tooltipItem, myData) {
                             var label = myData.datasets[tooltipItem.datasetIndex].label || '';
                             if (label) {
                                 label += ': ';
@@ -334,7 +333,7 @@
                     text: '指数/趋势收益分布对比图'
                 },
                 responsive: true,
-                responsiveAnimationDuration:3000,
+                responsiveAnimationDuration: 3000,
                 scales: {
                     yAxes: [{
                         ticks: {
@@ -349,7 +348,7 @@
                     mode: 'index',
 
                     callbacks: {
-                        label: function(tooltipItem, myData) {
+                        label: function (tooltipItem, myData) {
                             var label = myData.datasets[tooltipItem.datasetIndex].label || '';
                             if (label) {
                                 label += ': ';
@@ -368,19 +367,20 @@
 </script>
 
 <style>
-    table.inputTable{
-        width:100%;
-    }
-    table.inputTable td{
-        padding:20px 20px;
+    table.inputTable {
+        width: 100%;
     }
 
-    table{
-        margin:20px;
+    table.inputTable td {
+        padding: 20px 20px;
     }
 
-    div#workingArea{
-        margin:50px;
+    table {
+        margin: 20px;
+    }
+
+    div#workingArea {
+        margin: 50px;
     }
 </style>
 
@@ -390,7 +390,7 @@
         <tr>
             <td width="25%">
                 <span data-toggle="tooltip" data-placement="top" title="选择某一个指数进行模拟回测">
-                    请选择指数:<span class="glyphicon glyphicon-question-sign" > </span>
+                    请选择指数:<span class="glyphicon glyphicon-question-sign"> </span>
                 </span>
             </td>
             <td width="25%">
@@ -403,49 +403,53 @@
         </tr>
         <tr>
             <td>
-                            <span data-toggle="tooltip" data-placement="top" title="MA 即 moving average, 移动均线的意思。 比如MA20就表示20日均线，取最近20天的值的平均数">
-                            MA(均线) :<span class="glyphicon glyphicon-question-sign   " > </span>
+                            <span data-toggle="tooltip" data-placement="top"
+                                  title="MA 即 moving average, 移动均线的意思。 比如MA20就表示20日均线，取最近20天的值的平均数">
+                            MA(均线) :<span class="glyphicon glyphicon-question-sign   "> </span>
                         </span>
             </td>
             <td>
                 <select class="form-control" @change="changeParam" v-model="ma">
-                    <option  value="5">5日</option>
-                    <option  value="10">10日</option>
-                    <option  value="20">20日</option>
-                    <option  value="60">60日</option>
+                    <option value="5">5日</option>
+                    <option value="10">10日</option>
+                    <option value="20">20日</option>
+                    <option value="60">60日</option>
                 </select>
             </td>
         </tr>
         <tr>
             <td>
-           				<span data-toggle="tooltip" data-placement="top" title="当前值大于均线，说明上升趋势来了，就可以购买，或者再稍等等，比均线多 5% 再下手，那么购买阈值就是 1.05 ">
-            				购买阈值:<span class="glyphicon glyphicon-question-sign	" > </span>
+           				<span data-toggle="tooltip" data-placement="top"
+                              title="当前值大于均线，说明上升趋势来了，就可以购买，或者再稍等等，比均线多 5% 再下手，那么购买阈值就是 1.05 ">
+            				购买阈值:<span class="glyphicon glyphicon-question-sign	"> </span>
            				</span>
             </td>
             <td>
                 <select class="form-control" @change="changeParam" v-model="buyThreshold">
-                    <option  v-for="i in 9" :value="i/100+1">{{i/100+1|formatNumberFilter(2)}}</option>
+                    <option v-for="i in 9" :value="i/100+1">{{i/100+1|formatNumberFilter(2)}}</option>
                 </select>
             </td>
             <td>
-           				<span data-toggle="tooltip" data-placement="top" title="当前值低于均线，说明下跌趋势来了，就可以出售，或者再稍等等，比最近的高点低 5%，那么购买阈值就是 0.95">
-            				出售阈值:<span class="glyphicon glyphicon-question-sign	" > </span>
+           				<span data-toggle="tooltip" data-placement="top"
+                              title="当前值低于均线，说明下跌趋势来了，就可以出售，或者再稍等等，比最近的高点低 5%，那么购买阈值就是 0.95">
+            				出售阈值:<span class="glyphicon glyphicon-question-sign	"> </span>
            				</span>
             </td>
             <td>
-                <select class="form-control" @change="changeParam"  v-model="sellThreshold">
+                <select class="form-control" @change="changeParam" v-model="sellThreshold">
                     <option v-for="i in 10" :value="1-i/100">{{1-i/100|formatNumberFilter(2)}}</option>
                 </select>
             </td>
         </tr>
         <tr>
             <td>
-           				<span data-toggle="tooltip" data-placement="top" title="每一笔交易都会有手续费，一般说来手续费都不高，千分之 1.5 的左右，默认是没有计算手续费的">
-            				手续费:<span class="glyphicon glyphicon-question-sign	" > </span>
+           				<span data-toggle="tooltip" data-placement="top"
+                              title="每一笔交易都会有手续费，一般说来手续费都不高，千分之 1.5 的左右，默认是没有计算手续费的">
+            				手续费:<span class="glyphicon glyphicon-question-sign	"> </span>
            				</span>
             </td>
             <td>
-                <select class="form-control" @change="changeParam"  v-model="serviceCharge">
+                <select class="form-control" @change="changeParam" v-model="serviceCharge">
                     <option value="0">无</option>
                     <option value="0.001">0.1%</option>
                     <option value="0.0015">0.15%</option>
@@ -456,25 +460,27 @@
         <tr>
             <td>
                         <span data-toggle="tooltip" data-placement="top" title="指定模拟回测的开始日期，默认是当前指数最开始的日期">
-                            开始日期:<span class="glyphicon glyphicon-question-sign  " > </span>
+                            开始日期:<span class="glyphicon glyphicon-question-sign  "> </span>
                         </span>
             </td>
             <td>
                 <div class="form-group">
                     <div class="input-group date" id="date4Start">
-                        <input  type="text" readOnly="readOnly" class="form-control"  ><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                        <input type="text" readOnly="readOnly" class="form-control"><span class="input-group-addon"><i
+                            class="glyphicon glyphicon-th"></i></span>
                     </div>
                 </div>
             </td>
             <td>
                         <span data-toggle="tooltip" data-placement="top" title="指定模拟回测的结束日期，默认是当前指数最后的日期">
-                            结束日期:<span class="glyphicon glyphicon-question-sign  " > </span>
+                            结束日期:<span class="glyphicon glyphicon-question-sign  "> </span>
                         </span>
             </td>
             <td>
                 <div class="form-group">
                     <div class="input-group date" id="date4End">
-                        <input type="text" readOnly="readOnly" class="form-control"  ><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                        <input type="text" readOnly="readOnly" class="form-control"><span class="input-group-addon"><i
+                            class="glyphicon glyphicon-th"></i></span>
                     </div>
                 </div>
             </td>
@@ -484,7 +490,7 @@
 
     <div class="label label-warning">收益对比图</div>
 
-    <div  class="div4chart" style="margin:0px auto; width:80%">
+    <div class="div4chart" style="margin:0px auto; width:80%">
         <canvas class='canvas4Profit'></canvas>
     </div>
 
@@ -517,7 +523,9 @@
             <td>
                 <span v-if="bean.sellClosePoint==0">n/a</span>
 
-                <span class="label" v-bind:class="{ 'label-danger' : bean.sellClosePoint>bean.buyClosePoint, 'label-success' : bean.sellClosePoint<=bean.buyClosePoint }" v-if="bean.sellClosePoint!=0">{{(bean.sellClosePoint-bean.buyClosePoint)*100/bean.buyClosePoint | formatNumberFilter(2)}}%</span>
+                <span class="label"
+                      v-bind:class="{ 'label-danger' : bean.sellClosePoint>bean.buyClosePoint, 'label-success' : bean.sellClosePoint<=bean.buyClosePoint }"
+                      v-if="bean.sellClosePoint!=0">{{(bean.sellClosePoint-bean.buyClosePoint)*100/bean.buyClosePoint | formatNumberFilter(2)}}%</span>
 
             </td>
             <td>
@@ -530,7 +538,7 @@
     </table>
 
     <div class="label label-warning">收益一览</div>
-    <table class="table table-striped table-bordered table-condensed" >
+    <table class="table table-striped table-bordered table-condensed">
         <thead>
         <th>投资类型</th>
         <th>投资时长 (年)</th>
@@ -541,14 +549,14 @@
         <tbody>
         <tr>
             <td>指数投资</td>
-            <td>{{years|formatNumberFilter(2)}} </td>
+            <td>{{years|formatNumberFilter(2)}}</td>
             <td>{{(indexIncomeTotal+1)*1000|formatMoneyFilter}}</td>
             <td>{{indexIncomeTotal*100|formatNumberFilter(2)}}%</td>
             <td>{{indexIncomeAnnual*100|formatNumberFilter(2)}}%</td>
         </tr>
         <tr>
             <td>趋势投资</td>
-            <td>{{years|formatNumberFilter(2)}} </td>
+            <td>{{years|formatNumberFilter(2)}}</td>
             <td>{{(trendIncomeTotal+1)*1000|formatMoneyFilter}}</td>
             <td>{{trendIncomeTotal*100|formatNumberFilter(2)}}%</td>
             <td>{{trendIncomeAnnual*100|formatNumberFilter(2)}}%</td>
@@ -564,7 +572,7 @@
     </table>
 
     <div class="label label-warning">统计交易</div>
-    <table class="table table-bordered table-condensed" >
+    <table class="table table-bordered table-condensed">
         <thead>
         <th align="center" colspan="2">趋势投资盈亏统计</th>
         </thead>
@@ -591,19 +599,19 @@
         </tr>
         <tr>
             <td>胜率</td>
-            <td>{{(winCount/(winCount+lossCount))*100|formatNumberFilter(2)}}%	</td>
+            <td>{{(winCount/(winCount+lossCount))*100|formatNumberFilter(2)}}%</td>
         </tr>
         </tbody>
     </table>
 
     <div class="label label-warning">收益分布对比图</div>
 
-    <div  class="div4chart" style="margin:0px auto; width:80%">
+    <div class="div4chart" style="margin:0px auto; width:80%">
         <canvas class='canvas4AnnualIncome'></canvas>
     </div>
 
     <div class="label label-warning">收益分布对比表</div>
-    <table class="table table-striped table-bordered table-condensed" >
+    <table class="table table-striped table-bordered table-condensed">
         <thead>
         <th>年份</th>
         <th>指数收益</th>
@@ -625,7 +633,7 @@
     </table>
 </div>
 
-<div th:replace="include/footer::html" ></div>
+<div th:replace="include/footer::html"></div>
 
 </body>
 </html>

@@ -11,13 +11,13 @@ public class QuartzConfiguration {
     private static int mTaskTime = 1;
 
     @Bean
-    public JobDetail weatherDataSyncJobDetail(){
+    public JobDetail weatherDataSyncJobDetail() {
         return JobBuilder.newJob(IndexDataSyncJob.class).withIdentity("IndexDataSyncJob")
                 .storeDurably().build();
     }
 
     @Bean
-    public Trigger weatherDataSyncTrigger(){
+    public Trigger weatherDataSyncTrigger() {
         SimpleScheduleBuilder schedBuilder = SimpleScheduleBuilder.simpleSchedule()
                 .withIntervalInMinutes(mTaskTime).repeatForever();
 

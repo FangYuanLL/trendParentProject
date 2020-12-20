@@ -14,7 +14,7 @@ public class ViewController {
     String version;
 
     @GetMapping("/")
-    public String view(Model m){
+    public String view(Model m) {
 
         m.addAttribute("version", version);
         return "view";

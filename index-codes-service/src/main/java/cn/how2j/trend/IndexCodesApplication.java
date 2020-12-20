@@ -26,39 +26,38 @@ public class IndexCodesApplication {
         int redisPort = 6379;
         int eurekaServerPort = 8761;
 
-        if(NetUtil.isUsableLocalPort(eurekaServerPort)) {
-            System.err.printf("检查到端口%d 未启用，判断 eureka 服务器没有启动，本服务无法使用，故退出%n", eurekaServerPort );
+        if (NetUtil.isUsableLocalPort(eurekaServerPort)) {
+            System.err.printf("检查到端口%d 未启用，判断 eureka 服务器没有启动，本服务无法使用，故退出%n", eurekaServerPort);
             System.exit(1);
         }
 
-        if(NetUtil.isUsableLocalPort(redisPort)) {
-            System.err.printf("检查到端口%d 未启用，判断 redis 服务器没有启动，本服务无法使用，故退出%n", redisPort );
+        if (NetUtil.isUsableLocalPort(redisPort)) {
+            System.err.printf("检查到端口%d 未启用，判断 redis 服务器没有启动，本服务无法使用，故退出%n", redisPort);
             System.exit(1);
         }
 
-        if(null!=args && 0!=args.length) {
+        if (null != args && 0 != args.length) {
             for (String arg : args) {
-                if(arg.startsWith("port=")) {
-                    String strPort= StrUtil.subAfter(arg, "port=", true);
-                    if(NumberUtil.isNumber(strPort)) {
+                if (arg.startsWith("port=")) {
+                    String strPort = StrUtil.subAfter(arg, "port=", true);
+                    if (NumberUtil.isNumber(strPort)) {
                         port = Convert.toInt(strPort);
                     }
                 }
             }
         }
 
-        if(0==port) {
-            Future<Integer> future = ThreadUtil.execAsync(() ->{
+        if (0 == port) {
+            Future<Integer> future = ThreadUtil.execAsync(() -> {
                 int p = 0;
-                System.out.printf("请于5秒钟内输入端口号, 推荐  %d ,超过5秒将默认使用 %d %n",defaultPort,defaultPort);
+                System.out.printf("请于5秒钟内输入端口号, 推荐  %d ,超过5秒将默认使用 %d %n", defaultPort, defaultPort);
                 Scanner scanner = new Scanner(System.in);
-                while(true) {
+                while (true) {
                     String strPort = scanner.nextLine();
-                    if(!NumberUtil.isInteger(strPort)) {
+                    if (!NumberUtil.isInteger(strPort)) {
                         System.err.println("只能是数字");
                         continue;
-                    }
-                    else {
+                    } else {
                         p = Convert.toInt(strPort);
                         scanner.close();
                         break;
@@ -66,16 +65,15 @@ public class IndexCodesApplication {
                 }
                 return p;
             });
-            try{
-                port=future.get(5,TimeUnit.SECONDS);
-            }
-            catch (InterruptedException | ExecutionException | TimeoutException e){
+            try {
+                port = future.get(5, TimeUnit.SECONDS);
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 port = defaultPort;
             }
         }
 
-        if(!NetUtil.isUsableLocalPort(port)) {
-            System.err.printf("端口%d被占用了，无法启动%n", port );
+        if (!NetUtil.isUsableLocalPort(port)) {
+            System.err.printf("端口%d被占用了，无法启动%n", port);
             System.exit(1);
         }
         new SpringApplicationBuilder(IndexCodesApplication.class).properties("server.port=" + port).run(args);

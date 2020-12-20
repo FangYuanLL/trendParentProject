@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 /*
  * 获取redis数据
  */
@@ -15,7 +16,7 @@ import java.util.List;
 public class IndexDataService {
 
     @Cacheable(key = "'index-data-'+#p0")
-    public List<IndexData> get(String code){
+    public List<IndexData> get(String code) {
         return CollUtil.toList();
     }
 

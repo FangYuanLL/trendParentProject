@@ -13,7 +13,7 @@ public class IpConfig implements ApplicationListener<WebServerInitializedEvent> 
         this.port = webServerInitializedEvent.getWebServer().getPort();
     }
 
-    public int getPort(){
+    public int getPort() {
         return port;
     }
 }

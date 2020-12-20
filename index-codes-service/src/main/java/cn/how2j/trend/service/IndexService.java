@@ -14,14 +14,13 @@ public class IndexService {
 
     private List<Index> indexes;
 
-    @Cacheable(key="'all_codes'")
-    public List<Index> get(){
+    @Cacheable(key = "'all_codes'")
+    public List<Index> get() {
         Index index = new Index();
         index.setName("无效指数代码");
         index.setCode("000000");
         return CollUtil.toList(index);
     }
-
 
 
 }

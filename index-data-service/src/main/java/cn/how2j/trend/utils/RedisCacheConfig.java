@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class RedisCacheConfig {
 
     private Duration timeToLive = Duration.ZERO;
+
     public void setTimeToLive(Duration timeToLive) {
         this.timeToLive = timeToLive;
     }

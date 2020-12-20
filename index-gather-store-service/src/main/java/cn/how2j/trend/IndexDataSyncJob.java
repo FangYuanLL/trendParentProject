@@ -22,12 +22,12 @@ public class IndexDataSyncJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        System.out.println("启动定时器："+DateUtil.now());
-        List<Index> IndexList =  indexService.fresh();
-        for (Index index:IndexList){
+        System.out.println("启动定时器：" + DateUtil.now());
+        List<Index> IndexList = indexService.fresh();
+        for (Index index : IndexList) {
             indexDataService.fresh(index.getCode());
-            System.out.println("Code:"+index.getCode()+"  Name:"+index.getName()+" "+DateUtil.now());
+            System.out.println("Code:" + index.getCode() + "  Name:" + index.getName() + " " + DateUtil.now());
         }
-        System.out.println("定时器完成任务:"+DateUtil.now());
+        System.out.println("定时器完成任务:" + DateUtil.now());
     }
 }
